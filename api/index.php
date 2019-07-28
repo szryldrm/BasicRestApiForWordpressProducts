@@ -9,9 +9,6 @@ $allowedOrigins = array(
     //'*',
     'localhost',
     '*',
-    'https://megizbutik.com',
-    'http://www.megizbutik.com',
-    'https://www.megizbutik.com',
 );
 
 if (isset($_SERVER['HTTP_ORIGIN']) && $_SERVER['HTTP_ORIGIN'] != '') {

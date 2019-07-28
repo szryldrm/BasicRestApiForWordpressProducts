@@ -11,8 +11,8 @@ $allowedOrigins = array(
 
 if (isset($_SERVER['HTTP_ORIGIN']) && $_SERVER['HTTP_ORIGIN'] != '') {
     foreach ($allowedOrigins as $allowedOrigin) {
-        if (preg_match('#' . $allowedOrigin . '#', $_SERVER['HTTP_ORIGIN'])) {
-            header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
+        if (preg_match('#'.$allowedOrigin.'#', $_SERVER['HTTP_ORIGIN'])) {
+            header('Access-Control-Allow-Origin: '.$_SERVER['HTTP_ORIGIN']);
             header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
             header('Access-Control-Max-Age: 1000');
             header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
@@ -42,12 +42,12 @@ $app->get('/products', function (Request $request, Response $response) {
                                         p.post_title AS title,
                                         m.meta_value AS stock
                                     FROM
-                                        " . wp_posts . " p
-                                    INNER JOIN " . wp_postmeta . " m ON
+                                        ".wp_posts." p
+                                    INNER JOIN ".wp_postmeta." m ON
                                         (p.id = m.post_id)
-                                    INNER JOIN " . wp_postmeta . " mt ON
+                                    INNER JOIN ".wp_postmeta." mt ON
                                         (p.id = mt.post_id)
-                                    INNER JOIN " . wp_postmeta . " pt ON
+                                    INNER JOIN ".wp_postmeta." pt ON
                                         (p.id = pt.post_id)
                                     WHERE
                                         p.post_type = 'product'
@@ -79,15 +79,15 @@ $app->get('/products/{sku}', function (Request $request, Response $response) {
         $postSorgu = $db->prepare("SELECT p.id, 
                                     mt.meta_value AS sku,
                                     p.post_title AS title
-                                    FROM " . wp_posts . " p
-                                    INNER JOIN " . wp_postmeta . " mt ON (p.id = mt.post_id)
+                                    FROM ".wp_posts." p
+                                    INNER JOIN ".wp_postmeta." mt ON (p.id = mt.post_id)
                                     WHERE p.post_type = 'product' AND
                                      mt.meta_key = '_sku' AND
                                      mt.meta_value = ?");
         $postSorgu->execute([$sku]);
         $postSorgu = $postSorgu->fetch(PDO::FETCH_ASSOC);
         $metaSorgu = $db->prepare("SELECT *
-                                    FROM " . wp_postmeta . " p
+                                    FROM ".wp_postmeta." p
                                     WHERE p.post_id = ?");
         $metaSorgu->execute([$postSorgu['id']]);
         $metaSorgu = $metaSorgu->fetchAll(PDO::FETCH_ASSOC);
@@ -106,7 +106,7 @@ $app->get('/products/{sku}', function (Request $request, Response $response) {
             }
         }
         if ($postSorgu['id'] != null) {
-            $resimSorgu = $db->prepare("SELECT guid as images from " . wp_posts . " where id = ?");
+            $resimSorgu = $db->prepare("SELECT guid as images from ".wp_posts." where id = ?");
             $resimSorgu->execute([$post['imgId']]);
             $resimSorgu = $resimSorgu->fetch(PDO::FETCH_ASSOC);
             $result = array_merge($post, $resimSorgu);
@@ -144,8 +144,8 @@ $app->put('/products/update/{id}', function (Request $request, Response $respons
         $db = new Db();
         try {
             $db = $db->connect();
-            $statement = "UPDATE " . wp_postmeta . " as pm INNER JOIN " . wp_posts . " as p on pm.post_id = p.ID 
-                          SET pm.meta_value = :stock WHERE pm.meta_key='_stock' AND pm.post_id = '" . $id . "'";
+            $statement = "UPDATE ".wp_postmeta." as pm INNER JOIN ".wp_posts." as p on pm.post_id = p.ID 
+                          SET pm.meta_value = :stock WHERE pm.meta_key='_stock' AND pm.post_id = '".$id."'";
 
             $prepare = $db->prepare($statement);
 
